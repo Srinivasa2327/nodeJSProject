@@ -38,9 +38,9 @@ stages:
         publishLocation: 'Container'
         
 
-- stage: Deploy to Staging
+- stage: DeploytoStaging
   jobs:
-  - job: Deploy to Staging
+  - job: DeploytoStaging
     pool:
       vmImage: ubuntu-latest
 
