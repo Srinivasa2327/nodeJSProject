@@ -13,7 +13,6 @@ stages:
     pool:
       vmImage: ubuntu-latest
 
-
     steps:
     - task: NodeTool@0
       inputs:
@@ -25,11 +24,13 @@ stages:
         npm run build
       displayName: 'npm install and build'
 
-    - task: CopyFiles@2
+    - task: ArchiveFiles@2
       inputs:
-        SourceFolder: '$(Build.SourcesDirectory)'
-        Contents: '**'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        replaceExistingArchive: true
 
     - task: PublishPipelineArtifact@1
       inputs:
@@ -44,16 +45,6 @@ stages:
       vmImage: ubuntu-latest
 
     steps:
-
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        buildType: 'specific'
-        project: '73714e5f-13bc-4fcb-923c-f968cfe12847'
-        definition: '26'
-        buildVersionToDownload: 'latest'
-        artifactName: 'drop'
-        targetPath: '$(Pipeline.Workspace)'
-
     - task: AzureRmWebAppDeployment@4
       inputs:
         ConnectionType: 'AzureRM'
@@ -63,5 +54,6 @@ stages:
         deployToSlotOrASE: true
         ResourceGroupName: 'inlinemarket-exercise'
         SlotName: 'staging'
-        packageForLinux: '$(Pipeline.Workspace)/dist/dist/bundle.js'
+        packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+        RuntimeStack: 'NODE|12.9'
     
