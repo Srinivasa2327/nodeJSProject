@@ -62,5 +62,5 @@ stages:
         deployToSlotOrASE: true
         ResourceGroupName: 'inlinemarket-exercise'
         SlotName: 'staging'
-        packageForLinux: '$(System.ArtifactsDirectory)/**/dist/*.js'
+        packageForLinux: '$(System.ArtifactsDirectory)/**/dist/bundle.js'
     
