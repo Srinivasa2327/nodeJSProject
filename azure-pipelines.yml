@@ -62,5 +62,5 @@ stages:
         deployToSlotOrASE: true
         ResourceGroupName: 'inlinemarket-exercise'
         SlotName: 'staging'
-        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+        packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'
     
