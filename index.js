@@ -12,9 +12,13 @@ async function main() {
 
 
 // Enter your storage account name and shared key
-const account = "srinistorage77";
-const accountKey = "Rxruces1v7xH7ymJUouEZdYpAaOg//Do5oN5UtE7z48kSIJ0kwah8i9s7TGuS3ztRS1P8RbZu2Mmi6wXk5mM0g==";
- 
+//const account = "srinistorage77";
+
+const account = "inlinemarketdata";
+//const accountKey = "Rxruces1v7xH7ymJUouEZdYpAaOg//Do5oN5UtE7z48kSIJ0kwah8i9s7TGuS3ztRS1P8RbZu2Mmi6wXk5mM0g==";
+
+const accountKey = "jbEyQqsONKXxZU0oOB/mXoSQU16y3vP3RG3GWqCjw42+pXuIcH/xDxqvo3b/mZRFn0dc1uxnBIba5MVowjPvww==";
+
 // Use SharedKeyCredential with storage account and account key
 // SharedKeyCredential is only avaiable in Node.js runtime, not in browsers
 const sharedKeyCredential = new StorageSharedKeyCredential(account, accountKey);
@@ -24,7 +28,7 @@ const blobServiceClient = new BlobServiceClient(
 );
 
 
-const containerClient = blobServiceClient.getContainerClient("myblob");
+const containerClient = blobServiceClient.getContainerClient("customerdata");
 
 const blobClient = containerClient.getBlobClient("us-500.csv");
 
