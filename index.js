@@ -2,6 +2,8 @@
 
 const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
 
+var parse = require('papaparse');
+
 let downloaded
 
 async function main() {
@@ -68,12 +70,19 @@ var url = require('url');
 
 // Create a server
 http.createServer( function (request, response) {  
-
+/*
 response.writeHead(200, {'Content-Type': 'text/html'});
 
 response.end(downloaded);
+*/
+ 
+ response.writeHead(200, { 'Content-Type': 'text/html' });
 
-   
+        var html = createTable();
+
+        response.end(html);
+
+ 
 //}).listen(8082);
 }).listen(process.env.PORT||8080);
 // Console will print the message
@@ -84,3 +93,52 @@ console.log('Server running at http://127.0.0.1:8080/');
   
   )
  
+
+ 
+ 
+ function createTable() {
+  var results = parse.parse(downloaded, {
+    delimiter: ",",
+    skipEmptyLines: true
+  });
+
+  var output = results.data;
+
+  var columns = output[0];
+
+  // Create HTML's table structure
+  var html = "<html>\n<head>\n<style>\ntable, th, td {\n  border: 1px solid black;\n  border-collapse: collapse;\n}\n</style>\n</head>\n<body>\n";
+
+  html += "<table class=\"tablesorter\">\n";
+  html += "\t<thead>\n";
+  html += "\t\t<tr>\n";
+
+  // Columns
+  for (var i = 0; i < columns.length; i++) {
+    html += "\t\t\t<th>" + columns[i] + "</th>\n";
+  }
+
+  html += "\t\t</tr>\n";
+  html += "\t</thead>\n";
+
+  html += "\t<tbody>\n";
+
+  // Body
+  for (i = 1; i < output.length; i++) {
+    var rows = output[i];
+
+    html += "\t\t<tr>\n";
+
+    for (j = 0; j < rows.length; j++) {
+      html += "\t\t\t<td>" + rows[j] + "</td>\n";
+    }
+
+    html += "\t\t</tr>\n";
+  }
+
+  html += "\t</tbody>\n";
+  html += "</table>\n";
+  html += "</body>\n";
+  html += "</html>\n";
+  return html;
+}
