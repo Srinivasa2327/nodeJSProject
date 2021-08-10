@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack ./index.js --output-filename=./dist/bundle.js"
+    "build": "webpack ./index.js --output-filename=./dist/bundle.js",
+	"start": "node index.js"
   },
   "author": "",
   "license": "ISC",
