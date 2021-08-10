@@ -60,6 +60,6 @@ stages:
         deployToSlotOrASE: true
         ResourceGroupName: 'inlinemarket-exercise'
         SlotName: 'staging'
-        packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+        packageForLinux: '$(Pipeline.Workspace)/$(Build.BuildId).zip'
         RuntimeStack: 'NODE|12.9'
     
