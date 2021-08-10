@@ -36,3 +36,23 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
+        
+
+- stage: Deploy to Staging
+  jobs:
+  - job: Deploy to Staging
+    pool:
+      vmImage: ubuntu-latest
+
+    steps:
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'azconnection'
+        appType: 'webAppLinux'
+        WebAppName: 'dataui'
+        deployToSlotOrASE: true
+        ResourceGroupName: 'inlinemarket-exercise'
+        SlotName: 'staging'
+        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    
