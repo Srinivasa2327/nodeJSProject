@@ -70,11 +70,16 @@ stages:
               startUpCommand: 'npm run start'
 
           - powershell: |
-              echo "##vso[task.setvariable variable=someName;isOutput=true;]$Environment.Name"
+              echo "##vso[task.setvariable variable=someName;isOutput=true;]$(Environment.Name)"
+              echo $(someName)
+
 
   - job: NotifySuccess
     dependsOn: Deploy
     condition: succeeded()
+  #  variables: 
+   #   someName: $[ dependencies.job_deploy_infrastructure.outputs['someName'] ]
+       
     pool:
       vmImage: ubuntu-latest
     steps:
