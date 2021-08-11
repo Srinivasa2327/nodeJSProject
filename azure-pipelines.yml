@@ -69,9 +69,24 @@ stages:
               runtimeStack: 'NODE|10.10'
               startUpCommand: 'npm run start'
 
-          - powershell: |
-              echo "##vso[task.setvariable variable=someName;isOutput=true;]$(Environment.Name)"
-              echo $(someName)
+          - task: AzurePowerShell@5
+            condition: succeeded()
+            inputs:
+              azureSubscription: 'azconnection'
+              ScriptType: 'FilePath'
+              ScriptPath: '$(System.DefaultWorkingDirectory)/Notifications.ps1'
+              ScriptArguments: '-envName $(Environment.Name) -status $(Environment.Name)'
+              azurePowerShellVersion: 'LatestVersion'
+
+          - task: AzurePowerShell@5
+            condition: failed()
+            inputs:
+              azureSubscription: 'azconnection'
+              ScriptType: 'FilePath'
+              ScriptPath: '$(System.DefaultWorkingDirectory)/Notifications.ps1'
+              ScriptArguments: '-envName $(Environment.Name) -status $(Environment.Name)'
+              azurePowerShellVersion: 'LatestVersion'   
+
 
 
   - job: NotifySuccess
@@ -114,3 +129,5 @@ stages:
               WebAppName: 'dataui'
               ResourceGroupName: 'inlinemarket-exercise'
               SourceSlot: 'staging'
+
+     
