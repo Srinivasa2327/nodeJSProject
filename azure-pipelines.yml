@@ -6,10 +6,6 @@
 trigger:
 - master
 
-variables:
-  someName: ''
-  anotherName: '' 
-
 stages:
 - stage: Build
   jobs:
