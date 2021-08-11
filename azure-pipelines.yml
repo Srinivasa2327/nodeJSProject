@@ -77,3 +77,4 @@ stages:
         Action: 'Swap Slots'
         WebAppName: 'dataui'
         ResourceGroupName: 'inlinemarket-exercise'
+        SourceSlot: 'staging'
