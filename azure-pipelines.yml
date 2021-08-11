@@ -65,11 +65,19 @@ stages:
               runtimeStack: 'NODE|10.10'
               startUpCommand: 'npm run start'
 
+          - task: ExtractFiles@1
+            inputs:
+              archiveFilePatterns: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+              destinationFolder: '$(Pipeline.Workspace)'
+              cleanDestinationFolder: false
+              overwriteExistingFiles: true
+
+
           - task: AzurePowerShell@5
             inputs:
               azureSubscription: 'azconnection'
               ScriptType: 'FilePath'
-              ScriptPath: '$(Build.ArtifactStagingDirectory)/Notifications.ps1'
+              ScriptPath: '$(Pipeline.Workspace)/Notifications.ps1'
               ScriptArguments: '-envName $(Release.EnvironmentName) -status $(Release.Environments.{stage name}.Status)'
               azurePowerShellVersion: 'LatestVersion'
 
