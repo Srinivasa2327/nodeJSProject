@@ -72,7 +72,6 @@ stages:
 
           - powershell: |
                 $envName="$(Environment.Name)"
-                $resName="$(Environment.ResourceName)"
                 $pipeName="$(Build.DefinitionName)"
                 $buildreason="$(Build.Reason)"
                 echo $envName
@@ -87,7 +86,6 @@ stages:
                 "title" = "Deployment to Staging Success"
                 "text" = "`n 
                 EnvName: $($envName)`n
-                Status: $($resName)`n
                 Pipeline: $($pipeName)`n
                 Reason: $($buildreason)
                 "
