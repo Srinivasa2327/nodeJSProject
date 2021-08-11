@@ -96,13 +96,3 @@ stages:
               WebAppName: 'dataui'
               ResourceGroupName: 'inlinemarket-exercise'
               SourceSlot: 'staging'
-
-    
-
-    - task: AzurePowerShell@5
-      inputs:
-        azureSubscription: 'azconnection'
-        ScriptType: 'FilePath'
-        ScriptPath: '$(System.DefaultWorkingDirectory)/Notifications.ps1'
-        ScriptArguments: '-envName $(System.DefaultWorkingDirectory) -envID $(System.DefaultWorkingDirectory)'
-        azurePowerShellVersion: 'LatestVersion'
