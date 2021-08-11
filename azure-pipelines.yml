@@ -70,6 +70,7 @@ stages:
   displayName: DeployProd
   dependsOn: DeployStaging
   condition: succeeded()
+
   jobs:
   - deployment: Deploy
     displayName: Deploy
@@ -79,15 +80,14 @@ stages:
     strategy:
       runOnce:
         deploy:
+        
           steps:            
-          - task: AzureWebApp@1
-            displayName: 'Azure Web App Deploy: dataui'
+          - task: AzureAppServiceManage@0
             inputs:
               azureSubscription: 'azconnection'
-              appType: 'webAppLinux'
-              appName: 'dataui'
-              package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
-              runtimeStack: 'NODE|10.10'
-              startUpCommand: 'npm run start'    
+              Action: 'Swap Slots'
+              WebAppName: 'dataui'
+              ResourceGroupName: 'inlinemarket-exercise'
+              SourceSlot: 'staging'
 
     
