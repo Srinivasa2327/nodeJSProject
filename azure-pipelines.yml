@@ -81,7 +81,7 @@ stages:
 
       - task: ExtractFiles@1
         inputs:
-          archiveFilePatterns: '$(Pipeline.Workspace)/$(Build.BuildId).zip'
+          archiveFilePatterns: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
           destinationFolder: '$(Pipeline.Workspace)'
           cleanDestinationFolder: true
           overwriteExistingFiles: true
