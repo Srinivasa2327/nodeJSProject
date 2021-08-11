@@ -2,7 +2,7 @@ param([String]$envName,
 [String]$status
 )
 echo $envName
-echo $envID
+echo $status
 
 
 $JSONBody = [PSCustomObject][Ordered]@{
@@ -12,8 +12,8 @@ $JSONBody = [PSCustomObject][Ordered]@{
 "themeColor" = '0078D7'
 "title" = "Deployment Status"
 "text" = "`n 
-EnvName: $($envNamer)`n
-Status: $($envID) 
+EnvName: $($envName)`n
+Status: $($status) 
 "
 }
 
