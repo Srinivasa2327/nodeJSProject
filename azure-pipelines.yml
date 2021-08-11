@@ -72,11 +72,18 @@ stages:
       vmImage: ubuntu-latest
 
     steps:
+
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: 'drop'
+          targetPath: '$(Pipeline.Workspace)'
+
       - task: ExtractFiles@1
         inputs:
-          archiveFilePatterns: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+          archiveFilePatterns: '$(Pipeline.Workspace)/$(Build.BuildId).zip'
           destinationFolder: '$(Pipeline.Workspace)'
-          cleanDestinationFolder: false
+          cleanDestinationFolder: true
           overwriteExistingFiles: true
 
       - task: AzurePowerShell@5
