@@ -16,7 +16,7 @@ stages:
     steps:
     - task: NodeTool@0
       inputs:
-        versionSpec: '14.x'
+        versionSpec: '10.x'
       displayName: 'Install Node.js'
 
     - script: |
@@ -38,28 +38,56 @@ stages:
         artifact: 'drop'
         publishLocation: 'pipeline'
 
-- stage: DeploytoStaging
+- stage: DeployStaging
+  displayName: Deploystaging
+  dependsOn: Build
+  condition: succeeded()
   jobs:
-  - job: DeploytoStaging
-    pool:
+  - deployment: Deploy
+    displayName: Deploy
+    environment: staging
+    pool: 
       vmImage: ubuntu-latest
+    strategy:
+      runOnce:
+        deploy:
+          steps:            
+          - task: AzureWebApp@1
+            displayName: 'Azure Web App Deploy: dataui'
+            inputs:
+              azureSubscription: 'azconnection'
+              appType: 'webAppLinux'
+              appName: 'dataui'
+              deployToSlotOrASE: true
+              resourceGroupName: 'inlinemarket-exercise'
+              slotName: 'staging'
+              package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+              runtimeStack: 'NODE|10.10'
+              startUpCommand: 'npm run start'
 
-    steps:
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        buildType: 'current'
-        artifactName: 'drop'
-        targetPath: '$(Pipeline.Workspace)'
 
-    - task: AzureRmWebAppDeployment@4
-      inputs:
-        ConnectionType: 'AzureRM'
-        azureSubscription: 'azconnection'
-        appType: 'webAppLinux'
-        WebAppName: 'dataui'
-        deployToSlotOrASE: true
-        ResourceGroupName: 'inlinemarket-exercise'
-        SlotName: 'staging'
-        packageForLinux: '$(Pipeline.Workspace)/$(Build.BuildId).zip'
-        RuntimeStack: 'NODE|12.9'
+- stage: DeployProd
+  displayName: DeployProd
+  dependsOn: DeployStaging
+  condition: succeeded()
+
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy
+    environment: prod
+    pool: 
+      vmImage: ubuntu-latest
+    strategy:
+      runOnce:
+        deploy:
+        
+          steps:            
+          - task: AzureAppServiceManage@0
+            inputs:
+              azureSubscription: 'azconnection'
+              Action: 'Swap Slots'
+              WebAppName: 'dataui'
+              ResourceGroupName: 'inlinemarket-exercise'
+              SourceSlot: 'staging'
+
     
