@@ -69,7 +69,7 @@ stages:
             inputs:
               azureSubscription: 'azconnection'
               ScriptType: 'FilePath'
-              ScriptPath: '$(System.DefaultWorkingDirectory)/Notifications.ps1'
+              ScriptPath: '$(Build.ArtifactStagingDirectory)/Notifications.ps1'
               ScriptArguments: '-envName $(Release.EnvironmentName) -status $(Release.Environments.{stage name}.Status)'
               azurePowerShellVersion: 'LatestVersion'
 
