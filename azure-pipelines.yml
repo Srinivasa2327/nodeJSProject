@@ -71,21 +71,25 @@ stages:
               startUpCommand: 'npm run start'
 
           - powershell: |
-                $envName=$(Environment.Name)
-                $status=$(Environment.Name)
+                $envName="$(Environment.Name)"
+                $resName="$(Environment.ResourceName)"
+                $pipeName="$(Build.DefinitionName)"
+                $buildreason="$(Build.Reason)"
                 echo $envName
-                echo $status
+                echo $resName
 
 
                 $JSONBody = [PSCustomObject][Ordered]@{
                 "@type" = "MessageCard"
                 "@context" = "<http://schema.org/extensions>"
-                "summary" = "test"
+                "summary" = "Deployment to Staging Success"
                 "themeColor" = '0078D7'
-                "title" = "Deployment Status"
+                "title" = "Deployment to Staging Success"
                 "text" = "`n 
                 EnvName: $($envName)`n
-                Status: $($status) 
+                Status: $($resName)`n
+                Pipeline: $($pipeName)`n
+                Reason: $($buildreason)
                 "
                 }
 
