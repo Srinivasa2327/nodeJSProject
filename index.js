@@ -1,15 +1,9 @@
-//const Azure = require("@azure/storage-blob");
-
 const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
-
 var parse = require('papaparse');
-
 let downloaded
+let lastUpdateTime
 
 async function main() {
-
-
-
 
 // Enter your storage account name and shared key
 //const account = "srinistorage77";
@@ -30,8 +24,15 @@ const blobServiceClient = new BlobServiceClient(
 
 const containerClient = blobServiceClient.getContainerClient("customerdata");
 
-const blobClient = containerClient.getBlobClient("us-500.csv");
 
+for await (const item of containerClient.listBlobsByHierarchy("/")) {
+  if (item.name === "us-500.csv") {
+    //console.log(`\tBlobItem: name - ${item.name}, last modified - ${item.properties.lastModified}`);
+	lastUpdateTime=`File Name : ${item.name} , last modified time : ${item.properties.lastModified}`
+  }
+}
+
+const blobClient = containerClient.getBlobClient("us-500.csv");
 
 // Get blob content from position 0 to the end
 // In Node.js, get downloaded data by accessing downloadBlockBlobResponse.readableStreamBody
@@ -112,6 +113,9 @@ console.log('Server running at http://127.0.0.1:8080/');
 
   // Create HTML's table structure
   var html = "<html>\n<head>\n<style>\ntable, th, td {\n  border: 1px solid black;\n  border-collapse: collapse;\n}\n</style>\n</head>\n<body>\n";
+
+ html+="<p style=\"color:blue;text-align:center;font-size:140%\">"+lastUpdateTime+"</p>\n"
+
 
   html += "<table class=\"tablesorter\">\n";
   html += "\t<thead>\n";
