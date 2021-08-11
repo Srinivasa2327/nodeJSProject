@@ -78,7 +78,7 @@ stages:
               azureSubscription: 'azconnection'
               ScriptType: 'FilePath'
               ScriptPath: '$(Pipeline.Workspace)/Notifications.ps1'
-              ScriptArguments: '-envName $(Pipeline.Workspace) -status $(Pipeline.Workspace)'
+              ScriptArguments: '-envName $(Release.EnvironmentName) -status $(Release.EnvironmentName)'
               azurePowerShellVersion: 'LatestVersion'
 
 - stage: DeployProd
