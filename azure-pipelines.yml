@@ -70,7 +70,7 @@ stages:
               startUpCommand: 'npm run start'
 
           - powershell: |
-              Write-Host "$(Release.Environments.{stage-name}.status)"
+              Write-Host "'$(Release.Environments.{stage-name}.status)'"
 
   - job: NotifySuccess
     dependsOn: Deploy
