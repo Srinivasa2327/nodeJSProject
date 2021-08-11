@@ -6,6 +6,10 @@
 trigger:
 - master
 
+variables:
+  someName: ''
+  anotherName: '' 
+
 stages:
 - stage: Build
   jobs:
@@ -65,14 +69,15 @@ stages:
               runtimeStack: 'NODE|10.10'
               startUpCommand: 'npm run start'
 
+          - powershell: |
+              Write-Host "$(Release.Environments.{stage-name}.status)"
+
   - job: NotifySuccess
     dependsOn: Deploy
     condition: succeeded()
     pool:
       vmImage: ubuntu-latest
-
     steps:
-
       - task: AzurePowerShell@5
         inputs:
           azureSubscription: 'azconnection'
