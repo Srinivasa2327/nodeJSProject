@@ -62,4 +62,18 @@ stages:
         SlotName: 'staging'
         packageForLinux: '$(Pipeline.Workspace)/$(Build.BuildId).zip'
         RuntimeStack: 'NODE|12.9'
-    
+
+
+- stage: Deploy to Prod
+  jobs:
+  - job: DeploytoProd
+    pool:
+      vmImage: ubuntu-latest
+
+    steps:
+    - task: AzureAppServiceManage@0
+      inputs:
+        azureSubscription: 'azconnection'
+        Action: 'Swap Slots'
+        WebAppName: 'dataui'
+        ResourceGroupName: 'inlinemarket-exercise'
