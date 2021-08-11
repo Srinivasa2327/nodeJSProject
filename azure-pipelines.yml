@@ -70,7 +70,7 @@ stages:
               startUpCommand: 'npm run start'
 
           - powershell: |
-              Write-Host "'$(Release.Environments.{stage-name}.status)'"
+              echo "##vso[task.setvariable variable=someName;isOutput=true;]$Environment.Name"
 
   - job: NotifySuccess
     dependsOn: Deploy
@@ -83,7 +83,7 @@ stages:
           azureSubscription: 'azconnection'
           ScriptType: 'FilePath'
           ScriptPath: '$(System.DefaultWorkingDirectory)/Notifications.ps1'
-          ScriptArguments: '-envName $(Environment.Name) -status $(Environment.Name)'
+          ScriptArguments: '-envName $(someName) -status $(someName)'
           azurePowerShellVersion: 'LatestVersion'
 
 - stage: DeployProd
