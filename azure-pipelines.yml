@@ -65,21 +65,27 @@ stages:
               runtimeStack: 'NODE|10.10'
               startUpCommand: 'npm run start'
 
-          - task: ExtractFiles@1
-            inputs:
-              archiveFilePatterns: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
-              destinationFolder: '$(Pipeline.Workspace)'
-              cleanDestinationFolder: false
-              overwriteExistingFiles: true
+  - job: NotifySuccess
+    dependsOn: Deploy
+    condition: succeeded()
+    pool:
+      vmImage: ubuntu-latest
 
+    steps:
+      - task: ExtractFiles@1
+        inputs:
+          archiveFilePatterns: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+          destinationFolder: '$(Pipeline.Workspace)'
+          cleanDestinationFolder: false
+          overwriteExistingFiles: true
 
-          - task: AzurePowerShell@5
-            inputs:
-              azureSubscription: 'azconnection'
-              ScriptType: 'FilePath'
-              ScriptPath: '$(Pipeline.Workspace)/Notifications.ps1'
-              ScriptArguments: '-envName $(Environment.Name) -status $(Environment.Name)'
-              azurePowerShellVersion: 'LatestVersion'
+      - task: AzurePowerShell@5
+        inputs:
+          azureSubscription: 'azconnection'
+          ScriptType: 'FilePath'
+          ScriptPath: '$(Pipeline.Workspace)/Notifications.ps1'
+          ScriptArguments: '-envName $(Environment.Name) -status $(Environment.Name)'
+          azurePowerShellVersion: 'LatestVersion'
 
 - stage: DeployProd
   displayName: DeployProd
