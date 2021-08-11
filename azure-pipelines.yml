@@ -64,7 +64,7 @@ stages:
         RuntimeStack: 'NODE|12.9'
 
 
-- stage: Deploy to Prod
+- stage: DeploytoProd
   jobs:
   - job: DeploytoProd
     pool:
