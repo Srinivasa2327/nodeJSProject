@@ -3,6 +3,7 @@ const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storag
 var parse = require('papaparse');
 let downloaded
 let lastUpdateTime
+var containerClient
 
 async function main() {
 
@@ -14,35 +15,7 @@ const blobServiceClient = new BlobServiceClient(
   `https://${account}.blob.core.windows.net`,
   sharedKeyCredential
 );
-
-const containerClient = blobServiceClient.getContainerClient("customerdata");
-
-// Get the details of last modified time of the data file
-for await (const item of containerClient.listBlobsByHierarchy("/")) {
-  if (item.name === "us-500.csv") {
-    //console.log(`\tBlobItem: name - ${item.name}, last modified - ${item.properties.lastModified}`);
-	lastUpdateTime=`File Name : ${item.name} , last modified time : ${item.properties.lastModified}`
-  }
-}
-
-const blobClient = containerClient.getBlobClient("us-500.csv");
-
-const downloadBlockBlobResponse = await blobClient.download();
-downloaded = await streamToString(downloadBlockBlobResponse.readableStreamBody);
-
-// [Node.js only] A helper method used to read a Node.js readable stream into string
-async function streamToString(readableStream) {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    readableStream.on("data", (data) => {
-      chunks.push(data.toString());
-    });
-    readableStream.on("end", () => {
-      resolve(chunks.join(""));
-    });
-    readableStream.on("error", reject);
-  });
-}
+containerClient = blobServiceClient.getContainerClient("customerdata");  //
 
 }  // end of main function
 
@@ -58,14 +31,60 @@ var url = require('url');
 // Create a server
 http.createServer( function (request, response) {  
 
+//function to get data from blob storage
+async function fetchData()
+{
+
+// Get the details of last modified time of the data file
+for await (const item of containerClient.listBlobsByHierarchy("/")) {
+  if (item.name === "us-500.csv") {
+    //console.log(`\tBlobItem: name - ${item.name}, last modified - ${item.properties.lastModified}`);
+	lastUpdateTime=`File Name : ${item.name} , last modified time : ${item.properties.lastModified}`
+  }
+}
+
+const blobClient = containerClient.getBlobClient("us-500.csv");  //
+
+const downloadBlockBlobResponse = await blobClient.download();  //
+downloaded = await streamToString(downloadBlockBlobResponse.readableStreamBody);  //
+
+// [Node.js only] A helper method used to read a Node.js readable stream into string
+async function streamToString(readableStream) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    readableStream.on("data", (data) => {
+      chunks.push(data.toString());
+    });
+    readableStream.on("end", () => {
+      resolve(chunks.join(""));
+    });
+    readableStream.on("error", reject);
+  });
+}
+	
+	
+	
+	
+}
+
+fetchData().then(
+  
+  () => {
+	  
 response.writeHead(200, { 'Content-Type': 'text/html' });
 
 //invoke html content creation function
 var html = createTable();
 
 response.end(html);
+	  
+	  
+	  
+  })
+
 
 }).listen(process.env.PORT||8080);
+
 console.log('Server running at http://127.0.0.1:8080/');
 	  
 	}
